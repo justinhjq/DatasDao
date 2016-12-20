@@ -1,13 +1,16 @@
 package ttyy.com.datasdao;
 
-import ttyy.com.datasdao.cmds.DeleteQuery;
-import ttyy.com.datasdao.cmds.FindQuery;
-import ttyy.com.datasdao.cmds.InsertQuery;
-import ttyy.com.datasdao.cmds.UpdateQuery;
-import ttyy.com.datasdao.cmds.impls.DeleteQueryImpl;
-import ttyy.com.datasdao.cmds.impls.FindQueryImpl;
-import ttyy.com.datasdao.cmds.impls.InsertQueryImpl;
-import ttyy.com.datasdao.cmds.impls.UpdateQueryImpl;
+import android.database.sqlite.SQLiteDatabase;
+
+import ttyy.com.datasdao.query.AlterQuery;
+import ttyy.com.datasdao.query.DeleteQuery;
+import ttyy.com.datasdao.query.FindQuery;
+import ttyy.com.datasdao.query.InsertQuery;
+import ttyy.com.datasdao.query.UpdateQuery;
+import ttyy.com.datasdao.query.impls.DeleteQueryImpl;
+import ttyy.com.datasdao.query.impls.FindQueryImpl;
+import ttyy.com.datasdao.query.impls.InsertQueryImpl;
+import ttyy.com.datasdao.query.impls.UpdateQueryImpl;
 
 /**
  * Author: hjq
@@ -21,37 +24,56 @@ import ttyy.com.datasdao.cmds.impls.UpdateQueryImpl;
  */
 public class Core {
 
-    private SimpleSqliteDataBase mDatabase;
+    private SimpleSqliteDao mSqliteDao;
 
-    protected Core(SimpleSqliteDataBase database){
-        this.mDatabase = database;
+    private SQLiteDatabase mSqliteDatabase;
+
+    protected Core(SimpleSqliteDao database){
+        this.mSqliteDao = database;
     }
 
-    protected SimpleSqliteDataBase getDatabase(){
-        return mDatabase;
+    protected Core(SQLiteDatabase database){
+        mSqliteDatabase = database;
+    }
+
+    protected SimpleSqliteDao getDatabaseDao(){
+        return mSqliteDao;
+    }
+
+    private SQLiteDatabase getSqliteDatabase(){
+        return mSqliteDatabase == null ? mSqliteDao.getDatabase() : mSqliteDatabase;
     }
 
     public <T> FindQuery<T> findQuery(Class<T> tableModule){
-        FindQuery query = new FindQueryImpl<T>(tableModule, mDatabase.getDatabase());
-        query.setIsDebug(mDatabase.getConfig().isDebug());
+        FindQuery query = new FindQueryImpl<T>(tableModule, getSqliteDatabase());
+        query.setIsDebug(getDatabaseDao().getConfig().isDebug());
         return query;
     }
 
     public <T> InsertQuery<T> insertQuery(Class<T> tableModule){
-        InsertQuery query = new InsertQueryImpl<T>(tableModule, mDatabase.getDatabase());
-        query.setIsDebug(mDatabase.getConfig().isDebug());
+        InsertQuery query = new InsertQueryImpl<T>(tableModule, getSqliteDatabase());
+        query.setIsDebug(getDatabaseDao().getConfig().isDebug());
         return query;
     }
 
     public <T> DeleteQuery<T> deleteQuery(Class<T> tableModule){
-        DeleteQuery query = new DeleteQueryImpl<T>(tableModule, mDatabase.getDatabase());
-        query.setIsDebug(mDatabase.getConfig().isDebug());
+        DeleteQuery query = new DeleteQueryImpl<T>(tableModule, getSqliteDatabase());
+        query.setIsDebug(getDatabaseDao().getConfig().isDebug());
         return query;
     }
 
     public <T> UpdateQuery<T> updateQuery(Class<T> tableModule){
-        UpdateQuery query = new UpdateQueryImpl(tableModule, mDatabase.getDatabase());
-        query.setIsDebug(mDatabase.getConfig().isDebug());
+        UpdateQuery query = new UpdateQueryImpl(tableModule, getSqliteDatabase());
+        query.setIsDebug(getDatabaseDao().getConfig().isDebug());
+        return query;
+    }
+
+    public <T> AlterQuery<T> alterQuery(Class<T> tableModule){
+        AlterQuery query = new AlterQuery(tableModule, getSqliteDatabase());
+        if(getDatabaseDao() != null)
+            query.setIsDebug(getDatabaseDao().getConfig().isDebug());
+        else
+            query.setIsDebug(true);
         return query;
     }
 

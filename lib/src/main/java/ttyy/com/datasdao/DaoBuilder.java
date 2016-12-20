@@ -5,9 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Author: hjq
- * Date  : 2016/11/22
- * Class : DaoBuilder
- * Desc  : Edit By Hujinqi
+ * Date  : 2016/11/22 21:03
+ * Name  : DaoBuilder
+ * Intro : Edit By hjq
+ * Modification  History:
+ * Date          Author        	 Version          Description
+ * ----------------------------------------------------------
+ * 2016/11/22    hjq   1.0              1.0
  */
 public class DaoBuilder {
 
@@ -160,8 +164,8 @@ public class DaoBuilder {
      *
      * @return
      */
-    protected SimpleSqliteDataBase build() {
-        SimpleSqliteDataBase db = new SimpleSqliteDataBase(this);
+    protected SimpleSqliteDao build() {
+        SimpleSqliteDao db = new SimpleSqliteDao(this);
         return db;
     }
 

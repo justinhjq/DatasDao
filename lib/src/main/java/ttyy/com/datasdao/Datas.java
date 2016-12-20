@@ -1,5 +1,6 @@
 package ttyy.com.datasdao;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class Datas {
      * @return
      */
     public static Core createSqliteDatabase(DaoBuilder builder){
-        SimpleSqliteDataBase db = builder.build();
+        SimpleSqliteDao db = builder.build();
         Core core = new Core(db);
         Cache.cache(builder.getDbName(), core);
         return core;
@@ -37,7 +38,7 @@ public class Datas {
     public static boolean destroySqliteDatabase(String databaseName){
         Core core = Cache.fromCache(databaseName);
         if(core != null){
-            return core.getDatabase().destroy();
+            return core.getDatabaseDao().destroy();
         }
         return false;
     }
@@ -64,6 +65,15 @@ public class Datas {
     }
 
     /**
+     * 生成一个新的 但是不入缓存
+     * @param database
+     * @return
+     */
+    public static Core from(SQLiteDatabase database){
+        return new Core(database);
+    }
+
+    /**
      * 缓存
      */
     static class Cache{
@@ -72,6 +82,8 @@ public class Datas {
 
         static void cache(String dbName, Core core){
             caches.put(dbName, core);
+
+            setLastDBName(dbName);
         }
 
         static Core fromCache(String dbName){
