@@ -1,13 +1,19 @@
-package ttyy.com.datasdao.cmds;
+package ttyy.com.datasdao.query;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
- * Author: hujinqi
- * Date  : 2016-08-18
- * Description: 更新查询
+ * Author: hjq
+ * Date  : 2016/08/18 21:03
+ * Name  : UpdateQuery
+ * Intro : 更新查询
+ * Modification  History:
+ * Date          Author        	 Version          Description
+ * ----------------------------------------------------------
+ * 2016/08/18    hjq   1.0              1.0
  */
 public abstract class UpdateQuery<T> extends BaseQuery<T> {
 
@@ -64,13 +70,13 @@ public abstract class UpdateQuery<T> extends BaseQuery<T> {
         SQLiteStatement mStmt = compile();
         if(mDatabase.isDbLockedByCurrentThread()){
 
-            mStmt.executeUpdateDelete();
+            int num = mStmt.executeUpdateDelete();
         }else{
 
             mDatabase.beginTransaction();
             try {
 
-                mStmt.executeUpdateDelete();
+                int num = mStmt.executeUpdateDelete();
                 mDatabase.setTransactionSuccessful();
             } catch (Exception e) {
                 e.printStackTrace();

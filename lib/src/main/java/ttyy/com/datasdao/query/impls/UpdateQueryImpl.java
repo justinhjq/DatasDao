@@ -1,10 +1,10 @@
-package ttyy.com.datasdao.cmds.impls;
+package ttyy.com.datasdao.query.impls;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import ttyy.com.datasdao.cmds.UpdateQuery;
+import ttyy.com.datasdao.query.UpdateQuery;
 
 /**
  * Author: hujinqi
@@ -21,7 +21,7 @@ public class UpdateQueryImpl<T> extends UpdateQuery<T> {
     protected String createSql() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE ").append(mTableName);
+        sb.append("UPDATE ").append(getTableName());
 
         if(!TextUtils.isEmpty(str_set)){
             sb.append(" SET ").append(str_set);

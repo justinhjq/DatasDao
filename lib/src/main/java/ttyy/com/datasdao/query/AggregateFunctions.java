@@ -1,18 +1,22 @@
-package ttyy.com.datasdao.cmds;
+package ttyy.com.datasdao.query;
 
 /**
- * Author: hujinqi
- * Date  : 2016-08-18
- * Description:
+ * Author: hjq
+ * Date  : 2016/12/19 21:03
+ * Name  : AggregateFunctions
+ * Intro : 聚合函数
+ * Modification  History:
+ * Date          Author        	 Version          Description
+ * ----------------------------------------------------------
+ * 2016/08/18    hjq   1.0              1.0
  */
 public interface AggregateFunctions<T> {
 
     /**
      * cout()函数
-     * @param column
      * @return
      */
-    int count(String column);
+    int count();
 
     /**
      * 求平均数

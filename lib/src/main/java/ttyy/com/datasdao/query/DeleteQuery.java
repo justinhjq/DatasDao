@@ -1,4 +1,4 @@
-package ttyy.com.datasdao.cmds;
+package ttyy.com.datasdao.query;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -7,9 +7,14 @@ import android.text.TextUtils;
 import java.util.List;
 
 /**
- * Author: hujinqi
- * Date  : 2016-08-18
- * Description: 删除查询
+ * Author: hjq
+ * Date  : 2016/08/18 21:03
+ * Name  : DeleteQuery
+ * Intro : 删除查询
+ * Modification  History:
+ * Date          Author        	 Version          Description
+ * ----------------------------------------------------------
+ * 2016/08/18    hjq   1.0              1.0
  */
 public abstract class DeleteQuery<T> extends BaseQuery<T>{
 
@@ -77,13 +82,13 @@ public abstract class DeleteQuery<T> extends BaseQuery<T>{
 
         if (mDatabase.isDbLockedByCurrentThread()) {
 
-            bindValues(stmt, one, mColumns);
+            bindValues(stmt, one);
             stmt.executeUpdateDelete();
         } else {
 
             mDatabase.beginTransaction();
             try {
-                bindValues(stmt, one, mColumns);
+                bindValues(stmt, one);
                 stmt.executeUpdateDelete();
                 mDatabase.setTransactionSuccessful();
             } catch (Exception e) {
@@ -112,7 +117,7 @@ public abstract class DeleteQuery<T> extends BaseQuery<T>{
         if (mDatabase.isDbLockedByCurrentThread()) {
 
             for(T tmp : objs){
-                bindValues(stmt, tmp, mColumns);
+                bindValues(stmt, tmp);
                 stmt.executeUpdateDelete();
             }
 
@@ -121,7 +126,7 @@ public abstract class DeleteQuery<T> extends BaseQuery<T>{
             mDatabase.beginTransaction();
             try {
                 for(T tmp : objs){
-                    bindValues(stmt, tmp, mColumns);
+                    bindValues(stmt, tmp);
                     stmt.executeUpdateDelete();
                 }
                 mDatabase.setTransactionSuccessful();
@@ -133,8 +138,7 @@ public abstract class DeleteQuery<T> extends BaseQuery<T>{
         }
     }
 
-    @Override
     public void dropTable() {
-        super.dropTable();
+        mModuleTable.dropTable();
     }
 }

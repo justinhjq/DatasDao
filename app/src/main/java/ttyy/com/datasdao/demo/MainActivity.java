@@ -1,7 +1,6 @@
 package ttyy.com.datasdao.demo;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_update:
 
                 Datas.core().updateQuery(DB_A.class)
-                        .set("abc = 3")
+                        .set("abc = 10")
                         .update();
 
                 break;
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        Datas.from("database_a").deleteQuery(DB_A.class).delete();
+        Datas.from("database_a").deleteQuery(DB_A.class).delete();
         Datas.from("database_b").deleteQuery(DB_B.class).delete();
     }
 }

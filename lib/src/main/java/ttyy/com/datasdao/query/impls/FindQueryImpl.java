@@ -1,11 +1,11 @@
-package ttyy.com.datasdao.cmds.impls;
+package ttyy.com.datasdao.query.impls;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import ttyy.com.datasdao.cmds.FindQuery;
+import ttyy.com.datasdao.query.FindQuery;
 
 /**
  * Author: hujinqi
@@ -36,7 +36,7 @@ public class FindQueryImpl<T> extends FindQuery<T> {
         } else {
             sb.append(" * ");
         }
-        sb.append(" FROM ").append(mTableName);
+        sb.append(" FROM ").append(getTableName());
 
         if (!TextUtils.isEmpty(str_where)) {
             sb.append(" WHERE " + str_where);
@@ -83,9 +83,9 @@ public class FindQueryImpl<T> extends FindQuery<T> {
     }
 
     @Override
-    public int count(String column) {
+    public int count() {
         mFunctionName = "COUNT";
-        mFunctionColumn = column == null ? "*" : column;
+        mFunctionColumn = "*";
 
         Cursor cursor = go();
         if(cursor.moveToNext()){

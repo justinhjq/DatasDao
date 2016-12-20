@@ -1,9 +1,9 @@
-package ttyy.com.datasdao.cmds.impls;
+package ttyy.com.datasdao.query.impls;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import ttyy.com.datasdao.cmds.InsertQuery;
+import ttyy.com.datasdao.query.InsertQuery;
 
 /**
  * Author: hujinqi
@@ -20,11 +20,11 @@ public class InsertQueryImpl<T> extends InsertQuery<T> {
     protected String createSql() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO ").append(mTableName)
+        sb.append("INSERT INTO ").append(getTableName())
                 .append(" VALUES ( ");
-        for(int i = 0 ; i < mColumns.length ; i++){
+        for(int i = 0 ; i < getColumns().size() ; i++){
             sb.append(" ? ");
-            if(i < ( mColumns.length - 1 )){
+            if(i < ( getColumns().size() - 1 )){
                 sb.append(",");
             }
         }

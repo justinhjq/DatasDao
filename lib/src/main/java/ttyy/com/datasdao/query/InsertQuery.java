@@ -1,4 +1,4 @@
-package ttyy.com.datasdao.cmds;
+package ttyy.com.datasdao.query;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -6,9 +6,14 @@ import android.database.sqlite.SQLiteStatement;
 import java.util.List;
 
 /**
- * Author: hujinqi
- * Date  : 2016-08-18
- * Description: 插入查询
+ * Author: hjq
+ * Date  : 2016/08/18 21:03
+ * Name  : InsertQuery
+ * Intro : 插入查询
+ * Modification  History:
+ * Date          Author        	 Version          Description
+ * ----------------------------------------------------------
+ * 2016/08/18    hjq   1.0              1.0
  */
 public abstract class InsertQuery<T> extends BaseQuery<T> {
 
@@ -29,13 +34,13 @@ public abstract class InsertQuery<T> extends BaseQuery<T> {
 
         if (mDatabase.isDbLockedByCurrentThread()) {
 
-            bindValues(mStmt, one, mColumns);
+            bindValues(mStmt, one);
             mStmt.executeInsert();
         } else {
             mDatabase.beginTransaction();
             try {
 
-                bindValues(mStmt, one, mColumns);
+                bindValues(mStmt, one);
                 mStmt.executeInsert();
                 mDatabase.setTransactionSuccessful();
             } catch (Exception e) {
@@ -60,14 +65,14 @@ public abstract class InsertQuery<T> extends BaseQuery<T> {
         if (mDatabase.isDbLockedByCurrentThread()) {
 
             for (T entity : ones) {
-                bindValues(mStmt, entity, mColumns);
+                bindValues(mStmt, entity);
                 mStmt.executeInsert();
             }
         } else {
             mDatabase.beginTransaction();
             try {
                 for (T entity : ones) {
-                    bindValues(mStmt, entity, mColumns);
+                    bindValues(mStmt, entity);
                     mStmt.executeInsert();
                 }
                 mDatabase.setTransactionSuccessful();

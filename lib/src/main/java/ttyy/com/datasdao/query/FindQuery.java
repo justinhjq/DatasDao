@@ -1,4 +1,4 @@
-package ttyy.com.datasdao.cmds;
+package ttyy.com.datasdao.query;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,12 +7,17 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import ttyy.com.datasdao.util.InnerUtil;
+import ttyy.com.datasdao.convertor.CursorConvertor;
 
 /**
- * Author: hujinqi
- * Date  : 2016-08-18
- * Description: 查找查询
+ * Author: hjq
+ * Date  : 2016/08/18 21:03
+ * Name  : FindQuery
+ * Intro : 查找查询
+ * Modification  History:
+ * Date          Author        	 Version          Description
+ * ----------------------------------------------------------
+ * 2016/08/18    hjq   1.0              1.0
  */
 public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunctions<T> {
 
@@ -43,6 +48,12 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
         return this;
     }
 
+    @Override
+    public FindQuery setCursorConvertor(CursorConvertor convertor) {
+        super.setCursorConvertor(convertor);
+        return this;
+    }
+
     /**
      * 执行Sql
      * @return
@@ -61,7 +72,7 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
         if(cursor != null){
             try {
                 if(cursor.moveToNext()){
-                    result = InnerUtil.DaoParser.cursorToEntity(tClass, cursor, mColumns);
+                    result = mModuleTable.convertFromCursor(cursor);
                 }
             }finally {
                 cursor.close();
@@ -82,7 +93,7 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
             try{
                 cursor.moveToFirst();
                 if(cursor.moveToLast()){
-                    result = InnerUtil.DaoParser.cursorToEntity(tClass, cursor, mColumns);
+                    result = mModuleTable.convertFromCursor(cursor);
                 }
             }finally {
                 cursor.close();
@@ -102,7 +113,7 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
         if(cursor != null){
             try{
                 while (cursor.moveToNext()){
-                    T tmp = InnerUtil.DaoParser.cursorToEntity(tClass, cursor, mColumns);
+                    T tmp = mModuleTable.convertFromCursor(cursor);
                     result.add(tmp);
                 }
             }finally {
@@ -124,7 +135,7 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
         if(cursor != null){
             try{
                 if(cursor.moveToPosition(index)){
-                    result = InnerUtil.DaoParser.cursorToEntity(tClass, cursor, mColumns);
+                    result = mModuleTable.convertFromCursor(cursor);
                 }
             }finally {
                 cursor.close();
@@ -147,7 +158,7 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
             try{
                 if(cursor.moveToPosition(start)){
                     do {
-                        T tmp = InnerUtil.DaoParser.cursorToEntity(tClass, cursor, mColumns);
+                        T tmp = mModuleTable.convertFromCursor(cursor);
                         result.add(tmp);
                         start++;
                     }while (cursor.moveToNext() && start < end);
