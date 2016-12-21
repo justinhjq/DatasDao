@@ -47,12 +47,12 @@ Datas.core().updateQuery(DB_A.class)
             .update();
 
 // 删除操作
-  Datas.from("database_b").deleteQuery(DB_B.class)
+Datas.from("database_b").deleteQuery(DB_B.class)
                           .where("B_TAG = 'DB_B'")
                           .delete();
 
 // Alter Sqlite只支持RENAME TO /ADD COLUMN
- Datas.from("database_a")
+Datas.from("database_a")
       .alterQuery(DB_A.class)
       .addColumn("abc", int.class);
 ```
