@@ -48,12 +48,25 @@ Datas.core().updateQuery(DB_A.class)
 
 // 删除操作
 Datas.from("database_b").deleteQuery(DB_B.class)
-                          .where("B_TAG = 'DB_B'")
-                          .delete();
+                        .where("B_TAG = 'DB_B'")
+                        .delete();
 
 // Alter Sqlite只支持RENAME TO /ADD COLUMN
 Datas.from("database_a")
-      .alterQuery(DB_A.class)
-      .addColumn("abc", int.class);
+     .alterQuery(DB_A.class)
+     .addColumn("abc", int.class);
+     
+// IO操作    
+// 导出数据库
+Datas.from("database_a")
+     .ioQuery()
+     .setDBExportPath(export_path)
+     .startExport();
+     
+// 导入数据库
+ Datas.from("database_a")
+      .ioQuery()
+      .addDBSourcePath(source_path)
+      .startImport();
 ```
 <br><br><br>源码可见更多可用数据库操作方法
