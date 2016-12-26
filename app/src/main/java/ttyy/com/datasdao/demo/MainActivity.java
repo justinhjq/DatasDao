@@ -1,6 +1,7 @@
 package ttyy.com.datasdao.demo;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,8 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_find:
 
                 DB_A find_a = Datas.from("database_a").findQuery(DB_A.class).selectAt(0);
-                int count = Datas.from("database_b").findQuery(DB_B.class)
-                        .count();
+                int count = Datas.from("database_b").findQuery(DB_B.class).count();
                 Log.i("Datas", "DB_A "+ find_a.tag + " abc " + find_a.abc);
                 Log.i("Datas", "DB_B datas.size() "+count);
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tv_update:
 
                 Datas.core().updateQuery(DB_A.class)
-                        .set("abc = 10")
+                        .set("abc = 3")
                         .update();
 
                 break;
@@ -104,13 +104,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 boolean result = Datas.destroySqliteDatabase("database_a");
                 Log.i("Datas", "destroy database_a "+result);
                 break;
+            case R.id.tv_export_database:
+
+                String export_path = getExternalFilesDir("export_db").getPath()+"/target.db";
+                Datas.from("database_a")
+                        .ioQuery()
+                        .setDBExportPath(export_path)
+                        .startExport();
+                break;
+            case R.id.tv_import_database:
+
+                String source_path = getExternalFilesDir("export_db").getPath()+"/target.db";
+                Datas.from("database_a")
+                        .ioQuery()
+                        .addDBSourcePath(source_path)
+                        .startImport();
+                break;
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Datas.from("database_a").deleteQuery(DB_A.class).delete();
+//        Datas.from("database_a").deleteQuery(DB_A.class).delete();
         Datas.from("database_b").deleteQuery(DB_B.class).delete();
     }
 }
