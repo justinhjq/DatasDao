@@ -38,7 +38,7 @@ public class IOQuery {
     /**
      * 导出数据库的目标文件
      */
-    protected File mExportDBFile;
+    protected File mDBExportFile;
 
     public IOQuery(SQLiteDatabase database) {
         this.mDatabase = database;
@@ -135,7 +135,7 @@ public class IOQuery {
 
         try {
 
-            if(mDBSourceStream != null){
+            if (mDBSourceStream != null) {
                 mDBSourceStream.close();
             }
 
@@ -167,6 +167,7 @@ public class IOQuery {
             while ((l = mDBSourceStream.read(buffer)) != -1) {
                 os.write(buffer, 0, l);
             }
+            os.flush();
             os.close();
             mDBSourceStream.close();
             mDBSourceStream = null;
@@ -179,21 +180,51 @@ public class IOQuery {
     }
 
     /**
+     * 设置数据库导出目标文件
+     * @param file
+     * @return
+     */
+    public IOQuery setDBExportFile(File file) {
+        this.mDBExportFile = file;
+        return this;
+    }
+
+    /**
+     * 设置数据库导出目标文件路径
+     * @param path
+     * @return
+     */
+    public IOQuery setDBExportPath(String path) {
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+            setDBExportFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    /**
      * 开始导出
      */
     public void startExport() {
-        if (mExportDBFile == null
-                || !mExportDBFile.exists())
+        if (mDBExportFile == null
+                || !mDBExportFile.exists())
             return;
 
         try {
             mDBSourceStream = new FileInputStream(mDatabase.getPath());
-            OutputStream os = new FileOutputStream(mExportDBFile);
+            OutputStream os = new FileOutputStream(mDBExportFile);
             byte[] buffer = new byte[1024];
             int l = 0;
             while ((l = mDBSourceStream.read(buffer)) != -1) {
                 os.write(buffer, 0, l);
             }
+            os.flush();
             os.close();
             mDBSourceStream.close();
             mDBSourceStream = null;
