@@ -84,4 +84,26 @@
         android:onClick="onClick"
         android:background="@drawable/radius_rect"/>
 
+    <TextView
+        android:id="@+id/tv_export_database"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
+        android:text="Export Database"
+        android:textSize="16sp"
+        android:onClick="onClick"
+        android:background="@drawable/radius_rect"/>
+
+    <TextView
+        android:id="@+id/tv_import_database"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
+        android:text="Import Database"
+        android:textSize="16sp"
+        android:onClick="onClick"
+        android:background="@drawable/radius_rect"/>
+
 </LinearLayout>
