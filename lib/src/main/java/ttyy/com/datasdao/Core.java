@@ -108,4 +108,11 @@ public class Core {
         return query;
     }
 
+    /**
+     * 删除数据库下的所有表格
+     */
+    public void dropAllTables(){
+        new SimpleSqliteDao(getSqliteDatabase()).dropAllTables();
+    }
+
 }
