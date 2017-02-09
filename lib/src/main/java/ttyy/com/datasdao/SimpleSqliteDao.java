@@ -1,11 +1,15 @@
 package ttyy.com.datasdao;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Author: hjq
@@ -83,6 +87,44 @@ public class SimpleSqliteDao {
         }
 
         return mBuilder.getContext().deleteDatabase(database_name);
+    }
+
+    /**
+     * 清空数据库表格
+     */
+    public void dropAllTables() {
+        if(getDatabase().isDbLockedByCurrentThread()) {
+            this.executeDropAllCommands(getDatabase());
+        } else {
+            try {
+                getDatabase().beginTransaction();
+                this.executeDropAllCommands(getDatabase());
+                getDatabase().endTransaction();
+            } finally {
+                getDatabase().setTransactionSuccessful();
+            }
+        }
+
+    }
+
+    private void executeDropAllCommands(SQLiteDatabase mDatabase) {
+        ArrayList<String> mAllTableNames = new ArrayList();
+        String sql = "select name from sqlite_master where type = 'table'";
+        Cursor cursor = mDatabase.rawQuery(sql, null);
+        if(cursor != null) {
+            while(cursor.moveToNext()) {
+                String tableName = cursor.getString(0);
+                mAllTableNames.add(tableName);
+            }
+
+            cursor.close();
+
+            for(String tmpName : mAllTableNames){
+                String d_sql = "DROP TABLE " + tmpName;
+                mDatabase.execSQL(d_sql);
+            }
+
+        }
     }
 
 }
