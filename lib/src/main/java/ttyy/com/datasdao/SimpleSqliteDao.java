@@ -72,16 +72,24 @@ public class SimpleSqliteDao {
      * @return
      */
     public boolean destroy(){
-        // 数据库路径
-        String database_name = null;
-        if(getConfig().getDbDir() != null){
-            // 数据库不在默认位置，所以要给具体的路径
-            database_name = mBuilder.getDbDir()+"/"+mBuilder.getDbName();
-        }else {
-            // 默认定位在包目录下
-            database_name = mBuilder.getDbName();
-        }
+//        // 数据库路径
+//        String database_name = null;
+//        if(getConfig().getDbDir() != null){
+//            // 数据库不在默认位置，所以要给具体的路径
+//            database_name = mBuilder.getDbDir()+"/"+mBuilder.getDbName();
+//        }else {
+//            // 默认定位在包目录下
+//            database_name = mBuilder.getDbName();
+//        }
+//
+//        if(getConfig().isDebug()){
+//            Log.i("Datas",">>>>>> delete database "+database_name+" <<<<<<<<");
+//        }
+//
+//        return mBuilder.getContext().deleteDatabase(database_name);
 
+        // 数据库路径
+        String database_name = mDataBase.getPath();
         if(getConfig().isDebug()){
             Log.i("Datas",">>>>>> delete database "+database_name+" <<<<<<<<");
         }
