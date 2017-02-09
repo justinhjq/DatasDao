@@ -31,6 +31,10 @@ public class SimpleSqliteDao {
         mBuilder = builder;
     }
 
+    SimpleSqliteDao(SQLiteDatabase database){
+        mDataBase = database;
+    }
+
     private SQLiteDatabase createDataBase(DaoBuilder builder) {
         if (!TextUtils.isEmpty(builder.getDbDir())) {
             // 自定义dbDir为空，那么就取默认的db文件存储位置
@@ -87,6 +91,11 @@ public class SimpleSqliteDao {
 //        }
 //
 //        return mBuilder.getContext().deleteDatabase(database_name);
+
+        if(mBuilder == null || mBuilder.getContext() == null){
+            // 缺少Context上下文 无法完成此操作
+            return false;
+        }
 
         // 数据库路径
         String database_name = mDataBase.getPath();
