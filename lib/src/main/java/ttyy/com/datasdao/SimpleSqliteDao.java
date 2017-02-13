@@ -8,8 +8,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * Author: hjq
@@ -39,6 +37,9 @@ public class SimpleSqliteDao {
         if (!TextUtils.isEmpty(builder.getDbDir())) {
             // 自定义dbDir为空，那么就取默认的db文件存储位置
             File file = new File(builder.getDbDir(), builder.getDbName());
+            if(!file.exists()){
+                file.getParentFile().mkdirs();
+            }
             mDataBase = SQLiteDatabase.openOrCreateDatabase(file, null);
         } else {
             // 没有自定义dbDir，那么默认存储在手机内存中，需要root权限访问
@@ -116,9 +117,9 @@ public class SimpleSqliteDao {
             try {
                 getDatabase().beginTransaction();
                 this.executeDropAllCommands(getDatabase());
-                getDatabase().endTransaction();
-            } finally {
                 getDatabase().setTransactionSuccessful();
+            } finally {
+                getDatabase().endTransaction();
             }
         }
 
