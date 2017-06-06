@@ -14,7 +14,7 @@ import java.io.OutputStream;
 
 /**
  * Author: Administrator
- * Date  : 2016/12/26 15:39
+ * Date  : 2017/12/26 15:39
  * Name  : IOQuery
  * Intro : 数据库IO操作
  * 外部导入数据库
@@ -23,6 +23,7 @@ import java.io.OutputStream;
  * Date          Author        	 Version          Description
  * ----------------------------------------------------------
  * 2016/12/26    Administrator   1.0              1.0
+ * 2017/06/06    Administrator   1.0              移除IOException
  */
 public class IOQuery {
 
@@ -115,8 +116,6 @@ public class IOQuery {
             InputStream is = new FileInputStream(file);
             addDBSourceStream(is);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
