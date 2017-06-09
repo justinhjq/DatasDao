@@ -91,7 +91,6 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
         Cursor cursor = go();
         if(cursor != null){
             try{
-                cursor.moveToFirst();
                 if(cursor.moveToLast()){
                     result = mModuleTable.convertFromCursor(cursor);
                 }
