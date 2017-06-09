@@ -1,6 +1,7 @@
 package ttyy.com.datasdao.query;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -92,7 +93,14 @@ public class AlterQuery<T> extends BaseQuery<T> {
                 mDatabase.beginTransaction();
                 mDatabase.execSQL(sql);
                 mDatabase.setTransactionSuccessful();
-            } finally {
+            } catch (SQLiteException e){
+                String message = e.getMessage();
+                if(message.toLowerCase().startsWith("duplicate column name")){
+                    Log.w("Datas", "Column Has Existed!");
+                }else {
+                    e.printStackTrace();
+                }
+            }finally {
                 mDatabase.endTransaction();
             }
         }

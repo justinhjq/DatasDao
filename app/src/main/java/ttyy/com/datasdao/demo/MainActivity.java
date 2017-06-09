@@ -1,8 +1,8 @@
 package ttyy.com.datasdao.demo;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +10,7 @@ import android.view.View;
 import ttyy.com.datasdao.DaoBuilder;
 import ttyy.com.datasdao.Datas;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends Activity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tv_find:
 
-                DB_A find_a = Datas.from("database_a").findQuery(DB_A.class).selectAt(0);
+                DB_A find_a = Datas.from("database_a").findQuery(DB_A.class).selectFirst();
                 int count = Datas.from("database_b").findQuery(DB_B.class).count();
                 Log.i("Datas", "DB_A "+ find_a.tag + " abc " + find_a.abc);
                 Log.i("Datas", "DB_B datas.size() "+count);
@@ -119,6 +119,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .ioQuery()
                         .addDBSourcePath(source_path)
                         .startImport();
+                break;
+            case R.id.tv_next:
+
+                startActivity(new Intent(this, NextActivity.class));
+
                 break;
         }
     }

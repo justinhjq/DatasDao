@@ -88,8 +88,14 @@ public class FindQueryImpl<T> extends FindQuery<T> {
         mFunctionColumn = "*";
 
         Cursor cursor = go();
-        if(cursor.moveToNext()){
-            return cursor.getInt(0);
+        if(cursor != null){
+            try{
+                if(cursor.moveToNext()){
+                    return cursor.getInt(0);
+                }
+            }finally {
+                cursor.close();
+            }
         }
 
         return -1;
@@ -101,8 +107,14 @@ public class FindQueryImpl<T> extends FindQuery<T> {
         mFunctionColumn = column == null ? "*" : column;
 
         Cursor cursor = go();
-        if(cursor.moveToNext()){
-            return cursor.getDouble(0);
+        if(cursor != null){
+            try{
+                if(cursor.moveToNext()){
+                    return cursor.getDouble(0);
+                }
+            }finally {
+                cursor.close();
+            }
         }
 
         return -1;
@@ -114,8 +126,14 @@ public class FindQueryImpl<T> extends FindQuery<T> {
         mFunctionColumn = column == null ? "*" : column;
 
         Cursor cursor = go();
-        if(cursor.moveToNext()){
-            return cursor.getDouble(0);
+        if(cursor != null){
+            try{
+                if(cursor.moveToNext()){
+                    return cursor.getDouble(0);
+                }
+            }finally {
+                cursor.close();
+            }
         }
 
         return -1;
@@ -127,8 +145,14 @@ public class FindQueryImpl<T> extends FindQuery<T> {
         mFunctionColumn = column == null ? "*" : column;
 
         Cursor cursor = go();
-        if(cursor.moveToNext()){
-            return cursor.getDouble(0);
+        if(cursor != null){
+            try{
+                if(cursor.moveToNext()){
+                    return cursor.getDouble(0);
+                }
+            }finally {
+                cursor.close();
+            }
         }
 
         return -1;
