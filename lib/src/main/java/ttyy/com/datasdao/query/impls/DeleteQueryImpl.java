@@ -30,6 +30,9 @@ public class DeleteQueryImpl<T> extends DeleteQuery<T> {
         sb.append("DELETE FROM ");
         sb.append(getTableName());
 
+        // 重设Where语句
+        resetWhereExpression();
+
         if(!TextUtils.isEmpty(str_where)){
             sb.append(" WHERE ")
                    .append(str_where);
@@ -39,9 +42,7 @@ public class DeleteQueryImpl<T> extends DeleteQuery<T> {
             }
 
             return sb.toString();
-        }
-
-        if(isWhereClauseFromClass()){
+        }else if(isWhereClauseFromClass()){
             sb.append(" WHERE ");
             for(int i = 0 ; i < getColumns().size() ; i++){
                 sb.append(getColumns().get(i).getColumnName());
@@ -51,6 +52,8 @@ public class DeleteQueryImpl<T> extends DeleteQuery<T> {
                 }
             }
         }
+
+
 
         if(isDebug){
             Log.i("Datas",">>>>>> "+sb.toString()+" <<<<<<<<");
