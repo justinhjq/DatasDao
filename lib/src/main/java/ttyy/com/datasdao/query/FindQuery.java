@@ -5,9 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import ttyy.com.datasdao.convertor.CursorConvertor;
+import ttyy.com.datasdao.modules.SerializeHelper;
 
 /**
  * Author: hjq
@@ -26,8 +29,12 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
      */
     protected String str_where;
 
+    protected HashMap<String, String> mWhereColumnExpressions;
+
     public FindQuery(Class<T> tClass, SQLiteDatabase database) {
         super(tClass, database);
+
+        mWhereColumnExpressions = new HashMap<>();
     }
 
     /**
@@ -52,6 +59,68 @@ public abstract class FindQuery<T> extends BaseQuery<T> implements AggregateFunc
     public FindQuery setCursorConvertor(CursorConvertor convertor) {
         super.setCursorConvertor(convertor);
         return this;
+    }
+
+    public FindQuery<T> addWhereColumn(String column, Object value){
+
+        if(TextUtils.isEmpty(column)){
+            throw new UnsupportedOperationException("Column Name Not Support Empty Value!");
+        }
+
+        if(value == null){
+            throw new UnsupportedOperationException("Column Value Not Support Null Value!");
+        }
+
+        Class<?> valueTypeClass = value.getClass();
+        StringBuilder sb = new StringBuilder(column).append("=");
+        if (String.class.equals(valueTypeClass)) {
+
+            sb.append("'").append(value.toString()).append("'");
+        } else if (valueTypeClass.equals(Integer.class)
+                || valueTypeClass.equals(int.class)) {
+
+            sb.append(value.toString());
+        } else if (valueTypeClass.equals(Float.class)
+                || valueTypeClass.equals(float.class)) {
+
+            sb.append(value.toString());
+        } else if (valueTypeClass.equals(Double.class)
+                || valueTypeClass.equals(double.class)) {
+
+            sb.append(value.toString());
+        } else if (valueTypeClass.equals(Long.class)
+                || valueTypeClass.equals(long.class)) {
+
+            sb.append(value.toString());
+        } else if (valueTypeClass.equals(Boolean.class)
+                || valueTypeClass.equals(boolean.class)) {
+
+            sb.append(value.toString());
+        } else {
+
+            byte[] bytes = SerializeHelper.serialize(value);
+            sb.append(bytes.toString());
+        }
+
+        mWhereColumnExpressions.put(column, sb.toString());
+        return this;
+    }
+
+    protected void resetWhereExpression(){
+        if(mWhereColumnExpressions == null
+                || mWhereColumnExpressions.size() == 0){
+            return;
+        }
+        List<String> tupples = new LinkedList<>(mWhereColumnExpressions.values());
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < tupples.size(); i++){
+            String exp = tupples.get(i);
+            sb.append(exp);
+            if(i < (tupples.size() - 1)){
+                sb.append(" AND ");
+            }
+        }
+        where(sb.toString());
     }
 
     /**
