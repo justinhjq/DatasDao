@@ -38,6 +38,9 @@ public class FindQueryImpl<T> extends FindQuery<T> {
         }
         sb.append(" FROM ").append(getTableName());
 
+        // 重设Where语句
+        resetWhereExpression();
+
         if (!TextUtils.isEmpty(str_where)) {
             sb.append(" WHERE " + str_where);
         }
