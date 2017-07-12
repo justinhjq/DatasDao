@@ -105,6 +105,10 @@ public final class ModuleColumn {
         this.mField.set(obj, value);
     }
 
+    public Object getPropertyValue(Object obj) throws IllegalAccessException {
+        return this.mField.get(obj);
+    }
+
     /**
      * 设置obj的mFiled的属性值
      *
