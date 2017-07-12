@@ -2,6 +2,9 @@ package ttyy.com.datasdao.convertor;
 
 import android.database.Cursor;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import ttyy.com.datasdao.modules.ModuleColumn;
 import ttyy.com.datasdao.modules.ModuleTable;
 
@@ -16,10 +19,12 @@ import ttyy.com.datasdao.modules.ModuleTable;
  * 2016/12/20    Administrator   1.0              1.0
  */
 public class DefaultCursorConvertor implements CursorConvertor {
+
     @Override
     public <T> T convertFromCursor(ModuleTable<T> table, Cursor cursor) {
         try {
-            Object object = table.getTableClass().newInstance();
+            Constructor<T> constructor = table.getModuleClassEmptyConstructor();
+            Object object = constructor.newInstance();
             for (ModuleColumn tmp : table.getColumns()) {
                 tmp.setPropertyType(object, cursor);
             }
@@ -27,6 +32,10 @@ public class DefaultCursorConvertor implements CursorConvertor {
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;
