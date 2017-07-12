@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,8 @@ import ttyy.com.datasdao.convertor.CursorConvertor;
 public final class ModuleTable<T> {
 
     Class<T> tClass;
+    Constructor<T> tConstructor;
+
     List<ModuleColumn> mColumns;
     SQLiteDatabase mDatabase;
 
@@ -41,6 +44,19 @@ public final class ModuleTable<T> {
 
     public static <TB> ModuleTable<TB> from(Class<TB> clazz, SQLiteDatabase database){
         return new ModuleTable<>(clazz, database);
+    }
+
+    /**
+     * 获取class对应的无参构造函数
+     * @return
+     * @throws NoSuchMethodException
+     */
+    public Constructor<T> getModuleClassEmptyConstructor() throws NoSuchMethodException {
+        if(tConstructor == null){
+            tConstructor = tClass.getDeclaredConstructor();
+            tConstructor.setAccessible(true);
+        }
+        return tConstructor;
     }
 
     /**
