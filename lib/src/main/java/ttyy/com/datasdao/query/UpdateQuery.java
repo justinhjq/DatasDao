@@ -76,6 +76,15 @@ public abstract class UpdateQuery<T> extends BaseQuery<T> {
     }
 
     /**
+     * 针对对象的更新
+     * @param objs
+     * @return
+     */
+    public UpdateQueryObjectProxy<T> set(T ... objs){
+        return new UpdateQueryObjectProxy<T>(this).obj(objs);
+    }
+
+    /**
      * Update Set语句
      *
      * @param column
