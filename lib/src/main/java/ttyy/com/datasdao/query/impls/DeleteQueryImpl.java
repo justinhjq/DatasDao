@@ -33,7 +33,8 @@ public class DeleteQueryImpl<T> extends DeleteQuery<T> {
         // 重设Where语句
         resetWhereExpression();
 
-        if(!TextUtils.isEmpty(str_where)){
+        if(!TextUtils.isEmpty(str_where)
+                && !isWhereClauseFromClass()){
             sb.append(" WHERE ")
                    .append(str_where);
 
