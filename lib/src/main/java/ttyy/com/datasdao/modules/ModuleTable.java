@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ttyy.com.datasdao.annos.Constraint;
 import ttyy.com.datasdao.annos.Table;
+import ttyy.com.datasdao.constants.ConflictAction;
 import ttyy.com.datasdao.convertor.CursorConvertor;
 
 /**
@@ -33,26 +35,28 @@ public final class ModuleTable<T> {
     SQLiteDatabase mDatabase;
 
     String mTableName;
+    String mTableConstraint;
     String mCreateTableSql;
 
     CursorConvertor mCursorConvertor = CursorConvertor.DEFAULT;
 
-    private ModuleTable(Class<T> clazz, SQLiteDatabase database){
+    private ModuleTable(Class<T> clazz, SQLiteDatabase database) {
         this.tClass = clazz;
         this.mDatabase = database;
     }
 
-    public static <TB> ModuleTable<TB> from(Class<TB> clazz, SQLiteDatabase database){
+    public static <TB> ModuleTable<TB> from(Class<TB> clazz, SQLiteDatabase database) {
         return new ModuleTable<>(clazz, database);
     }
 
     /**
      * 获取class对应的无参构造函数
+     *
      * @return
      * @throws NoSuchMethodException
      */
     public Constructor<T> getModuleClassEmptyConstructor() throws NoSuchMethodException {
-        if(tConstructor == null){
+        if (tConstructor == null) {
             tConstructor = tClass.getDeclaredConstructor();
             tConstructor.setAccessible(true);
         }
@@ -61,22 +65,24 @@ public final class ModuleTable<T> {
 
     /**
      * 设置转换工具
+     *
      * @param convertor
      */
-    public void setCursorConvertor(CursorConvertor convertor){
+    public void setCursorConvertor(CursorConvertor convertor) {
         this.mCursorConvertor = convertor;
     }
 
     /**
      * 讲cursor转换为数据模型
+     *
      * @param cursor
      * @return
      */
-    public T convertFromCursor(Cursor cursor){
+    public T convertFromCursor(Cursor cursor) {
         return mCursorConvertor.convertFromCursor(this, cursor);
     }
 
-    public boolean isTableExists(){
+    public boolean isTableExists() {
 
         StringBuilder sqlSb = new StringBuilder();
         sqlSb.append("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?");
@@ -113,9 +119,9 @@ public final class ModuleTable<T> {
         return false;
     }
 
-    public String getCreateTableSql(){
+    public String getCreateTableSql() {
 
-        if(mCreateTableSql == null){
+        if (mCreateTableSql == null) {
             StringBuilder sqlSb = new StringBuilder();
             sqlSb.append("CREATE TABLE IF NOT EXISTS ");
             sqlSb.append(getTableName());
@@ -126,6 +132,11 @@ public final class ModuleTable<T> {
                 if (getColumns().indexOf(tmp) < (getColumns().size() - 1)) {
                     sb.append(",");
                 }
+            }
+
+            if (!TextUtils.isEmpty(getTableConstraint())) {
+                sb.append(",")
+                        .append(getTableConstraint());
             }
 
             if (sb.length() > 0) {
@@ -141,8 +152,8 @@ public final class ModuleTable<T> {
         return mCreateTableSql;
     }
 
-    public List<ModuleColumn> getColumns(){
-        if(mColumns == null){
+    public List<ModuleColumn> getColumns() {
+        if (mColumns == null) {
             mColumns = new ArrayList<>();
             Field[] fields = tClass.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
@@ -157,7 +168,7 @@ public final class ModuleTable<T> {
         return mColumns;
     }
 
-    public void createTable(){
+    public void createTable() {
 
         String sql = getCreateTableSql();
         if (mDatabase.isDbLockedByCurrentThread()) {
@@ -177,7 +188,7 @@ public final class ModuleTable<T> {
         }
     }
 
-    public void dropTable(){
+    public void dropTable() {
         StringBuilder sqlSb = new StringBuilder();
         sqlSb.append("DROP TABLE IF EXISTS ");
         sqlSb.append(getTableName());
@@ -198,8 +209,9 @@ public final class ModuleTable<T> {
     }
 
     static Pattern mPattern = Pattern.compile(".*\\.(.*)\\.(.*)");
-    public String getTableName(){
-        if(mTableName == null){
+
+    public String getTableName() {
+        if (mTableName == null) {
             Table mAnnoTable = tClass.getAnnotation(Table.class);
             if (mAnnoTable != null
                     && !TextUtils.isEmpty(mAnnoTable.value())) {
@@ -224,7 +236,50 @@ public final class ModuleTable<T> {
         return mTableName;
     }
 
-    public Class<T> getTableClass(){
+    public String getTableConstraint() {
+        if (mTableConstraint == null) {
+            Constraint mAnnoConstraint = tClass.getAnnotation(Constraint.class);
+            if (mAnnoConstraint == null) {
+                mTableConstraint = "";
+            } else {
+
+                String[] primarys = mAnnoConstraint.value();
+                ConflictAction action = mAnnoConstraint.conflict();
+
+                if (primarys == null
+                        || primarys.length < 1
+                        || action == null) {
+                    mTableConstraint = "";
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("PRIMARY KEY(");
+
+                    for (int i = 0; i < primarys.length; i++) {
+                        if (!TextUtils.isEmpty(primarys[i])) {
+                            sb.append(primarys[i]);
+                            if (i < primarys.length - 1) {
+                                sb.append(",");
+                            }
+                        }
+                    }
+
+                    if (sb.equals("PRIMARY KEY(")) {
+                        mTableConstraint = "";
+                    } else {
+                        sb.append(") ON CONFLICT ")
+                                .append(action.toString());
+                    }
+
+                    mTableConstraint = sb.toString();
+                }
+
+            }
+        }
+
+        return mTableConstraint;
+    }
+
+    public Class<T> getTableClass() {
         return tClass;
     }
 }
