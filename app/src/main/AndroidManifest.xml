@@ -19,6 +19,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".NextActivity"/>
+        
+        <provider
+            android:name="ttyy.com.sp.multiprocess.StoresContentProvider"
+            android:authorities="com.jin.data.multiprocess.sp"
+            android:exported="true" />
+        
     </application>
 
 </manifest>
