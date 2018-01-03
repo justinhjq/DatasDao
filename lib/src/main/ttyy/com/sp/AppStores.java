@@ -69,6 +69,7 @@ public class AppStores implements StoreIntf {
                 defaultValue = cursor.getInt(0);
             }
 
+            cursor.close();
         }
         return defaultValue;
     }
@@ -89,6 +90,19 @@ public class AppStores implements StoreIntf {
 
     @Override
     public float getFloat(String key, float defaultValue) {
+        Cursor cursor = resolver.query(MULTI_SP_URI,
+                new String[]{StoresContentProvider.COLUMN_VALUE},
+                "WHERE " + StoresContentProvider.COLUMN_KEY + " = ?",
+                new String[]{key},
+                null);
+        if (cursor != null) {
+
+            if (cursor.moveToFirst()) {
+                defaultValue = cursor.getFloat(0);
+            }
+
+            cursor.close();
+        }
         return defaultValue;
     }
 
@@ -108,6 +122,19 @@ public class AppStores implements StoreIntf {
 
     @Override
     public double getDouble(String key, double defaultValue) {
+        Cursor cursor = resolver.query(MULTI_SP_URI,
+                new String[]{StoresContentProvider.COLUMN_VALUE},
+                "WHERE " + StoresContentProvider.COLUMN_KEY + " = ?",
+                new String[]{key},
+                null);
+        if (cursor != null) {
+
+            if (cursor.moveToFirst()) {
+                defaultValue = cursor.getDouble(0);
+            }
+
+            cursor.close();
+        }
         return defaultValue;
     }
 
@@ -127,6 +154,19 @@ public class AppStores implements StoreIntf {
 
     @Override
     public long getLong(String key, long defaultValue) {
+        Cursor cursor = resolver.query(MULTI_SP_URI,
+                new String[]{StoresContentProvider.COLUMN_VALUE},
+                "WHERE " + StoresContentProvider.COLUMN_KEY + " = ?",
+                new String[]{key},
+                null);
+        if (cursor != null) {
+
+            if (cursor.moveToFirst()) {
+                defaultValue = cursor.getLong(0);
+            }
+
+            cursor.close();
+        }
         return defaultValue;
     }
 
@@ -146,6 +186,19 @@ public class AppStores implements StoreIntf {
 
     @Override
     public String getString(String key, String defaultValue) {
+        Cursor cursor = resolver.query(MULTI_SP_URI,
+                new String[]{StoresContentProvider.COLUMN_VALUE},
+                "WHERE " + StoresContentProvider.COLUMN_KEY + " = ?",
+                new String[]{key},
+                null);
+        if (cursor != null) {
+
+            if (cursor.moveToFirst()) {
+                defaultValue = cursor.getString(0);
+            }
+
+            cursor.close();
+        }
         return defaultValue;
     }
 
@@ -153,7 +206,7 @@ public class AppStores implements StoreIntf {
     public StoreIntf putBoolean(String key, boolean value) {
         ContentValues values = new ContentValues();
         values.put(StoresContentProvider.COLUMN_KEY, key);
-        values.put(StoresContentProvider.COLUMN_VALUE, value);
+        values.put(StoresContentProvider.COLUMN_VALUE, String.valueOf(value));
         resolver.insert(MULTI_SP_URI, values);
         return this;
     }
@@ -165,6 +218,19 @@ public class AppStores implements StoreIntf {
 
     @Override
     public boolean getBoolean(String key, boolean defaultValue) {
+        Cursor cursor = resolver.query(MULTI_SP_URI,
+                new String[]{StoresContentProvider.COLUMN_VALUE},
+                "WHERE " + StoresContentProvider.COLUMN_KEY + " = ?",
+                new String[]{key},
+                null);
+        if (cursor != null) {
+
+            if (cursor.moveToFirst()) {
+                defaultValue = Boolean.parseBoolean(cursor.getString(0));
+            }
+
+            cursor.close();
+        }
         return defaultValue;
     }
 }
